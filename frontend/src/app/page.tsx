@@ -75,13 +75,13 @@ export default function Home() {
 
         {/* Feature Cards Grid */}
         <motion.div
-          variants={containerVariants}
+          variants={containerVariants as any}
           initial="hidden"
           animate="show"
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 w-full"
         >
           {features.map((feature, idx) => (
-            <motion.div key={idx} variants={itemVariants} className="h-full w-full">
+            <motion.div key={idx} variants={itemVariants as any} className="h-full w-full">
               <Link
                 href={feature.href}
                 className={`group relative flex flex-col h-full bg-[#0a111e]/60 backdrop-blur-2xl border border-white/5 p-10 rounded-[2.5rem] transition-all duration-500 z-10 overflow-hidden transform hover:-translate-y-4 ${feature.border}`}
