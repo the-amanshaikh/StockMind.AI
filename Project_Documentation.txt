@@ -1,0 +1,67 @@
+================================================================================
+PROJECT TITLE: StockMindfull.AI - Natural Language Driven Algorithmic Trading Simulator
+================================================================================
+
+1. ABSTRACT
+--------------------------------------------------------------------------------
+StockMindfull.AI is a full-stack web application designed to streamline algorithmic trading backtesting. By leveraging Large Language Models (LLMs) for Natural Language Processing (NLP), the system translates unstructured conversational user input into structured, deterministic trading algorithms. The core engine applies these extracted bounds against historical OHLCV (Open, High, Low, Close, Volume) market data to simulate long-term trading performance, yielding detailed equity curves, win-rate distributions, and granular transaction histories.
+
+2. SYSTEM ARCHITECTURE
+--------------------------------------------------------------------------------
+The architecture is strictly decoupled into a Client-Server model.
+
+- Client-Side (Frontend): A Single Page Application (SPA) built using React.js and Next.js (App Router).
+- Server-Side (Backend): An ASGI REST API built with FastAPI and Python, handling concurrent HTTP requests and computational workloads.
+- NLP Middleware: Integration with the Google Gemini API to perform deterministic zero-shot extraction of trading parameters.
+- Data Aggregation Layer: Real-time historical market data ingestion pipelines via the `yfinance` library.
+
+3. FRONTEND IMPLEMENTATION (Client-Side)
+--------------------------------------------------------------------------------
+- Framework: Next.js (React) utilizing functional components.
+- Styling: Tailwind CSS for utility-first responsive DOM manipulation; Framer Motion for hardware-accelerated CSS transforms and state-driven component mounting animations.
+- State Management: React Hooks (`useState`, `useEffect`) govern asynchronous HTTP request lifecycles (loading states, error boundaries, payload rendering).
+- Data Visualization: `react-chartjs-2` is utilized to map complex programmatic time-series data (Equity Curves) and categorical arrays (Win/Loss ratios) onto scalable HTML5 Canvas elements.
+- Routing: The application maps independent system capabilities (Single Strategy Assessment, Comparative Model Analysis, Semantic News Sourcing) to completely isolated URL route segments, ensuring a clean monolithic component hierarchy.
+
+4. BACKEND IMPLEMENTATION (Server-Side)
+--------------------------------------------------------------------------------
+- Framework: FastAPI running on a Uvicorn ASGI server to support high-throughput asynchronous request handling.
+- Payload Validation: Pydantic models (e.g., `StrategyParams`, `BacktestResult`) are deployed to enforce strict static type checking, memory safety, and JSON schema validation at the endpoint boundaries.
+- NLP Parsing Engine (`strategy_parser/parser.py`):
+    - The extraction engine constructs predefined analytical prompts fed into the Gemini LLM. 
+    - It enforces strict JSON schemas to isolate parameters such as `ticker`, `buy_day`, `sell_day`, `start_date`, `end_date`, and `capital`.
+    - Function: This creates a semantic abstraction layer where unpredictable human string input is successfully parsed into a deterministic programmatic state.
+
+5. ALGORITHMIC BACKTESTING COMPUTATION (`backtest_engine/engine.py`)
+--------------------------------------------------------------------------------
+- Memory Structures: Relies heavily on Pandas DataFrames for the in-memory manipulation of massive time-series datasets.
+- Logic Flow:
+    1. Data Ingestion: The system fetches bounded OHLCV data via Yahoo Finance endpoints, normalizing index data into uniform datetime structures.
+    2. Vectorized Feature Engineering: The computational engine applies Pandas datetime accessors (`dt.day_name()`, `dt.strftime()`) to map generic timestamps specifically to the parsed actionable trading constraints.
+    3. Simulation Loop: The algorithm iterates programmatically through defined time boundaries (e.g., ISO weeks or distinct date ranges), isolating corresponding Open/Close prices for deterministic entry and exit positions.
+    4. Mathematical Evaluation: It tracks continuous portfolio capital, computing absolute net profit, return percentage matrices, and mutating an active equity curve array for frontend ingestion.
+
+6. API SPECIFICATIONS
+--------------------------------------------------------------------------------
+Endpoint: POST `/api/chat`
+Description: Acts as a universal, polymorphic command router.
+
+Request Payload (JSON):
+{
+    "text": "Buy Tata Motors every Monday and sell on Friday from Jan 1 to March 1..."
+}
+
+Response Payload (JSON):
+{
+    "text_response": "Executed 8 recurring weekly trades on TATAMOTORS.NS...",
+    "win_rate": 62.5,
+    "buys": 8,
+    "sells": 8,
+    "total_invested": 100000.0,
+    "final_value": 115420.50,
+    "profit": 15420.50,
+    "return_percentage": 15.42,
+    "transactions": [ ... ],
+    "equity_curve_dates": [ ... ],
+    "equity_curve_values": [ ... ]
+}
