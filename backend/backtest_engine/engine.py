@@ -65,7 +65,7 @@ def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
     # ---------------------------------------------------------
     # RECURRING STRATEGY LOGIC
     # ---------------------------------------------------------
-    else:
+    elif strategy.strategy_type == "recurring":
         if strategy.start_date:
             df = df[df['DateString'] >= strategy.start_date]
         if strategy.end_date:
@@ -114,7 +114,67 @@ def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
                     
                     equity_curve_dates.append(last_sell[time_col].strftime('%Y-%m-%d'))
                     equity_curve_values.append(round(capital, 2))
+
+    # ---------------------------------------------------------
+    # PERCENTAGE SWING STRATEGY LOGIC
+    # ---------------------------------------------------------
+    elif strategy.strategy_type == "percentage_swing":
+        if strategy.start_date:
+            df = df[df['DateString'] >= strategy.start_date]
+        if strategy.end_date:
+            df = df[df['DateString'] <= strategy.end_date]
+            
+        buy_drop = (strategy.buy_drop_pct or 5.0) / 100.0
+        sell_rise = (strategy.sell_rise_pct or 5.0) / 100.0
+        
+        holding = False
+        running_high = df.iloc[0]['Close'] if not df.empty else 0
+        buy_price = 0.0
+        shares = 0.0
+        
+        for idx, row in df.iterrows():
+            current_price = row['Close']
+            current_date = row[time_col]
+            
+            if not holding:
+                if current_price > running_high:
+                    running_high = current_price
                     
+                if current_price <= running_high * (1.0 - buy_drop):
+                    # Trigger Buy
+                    buy_price = current_price
+                    shares = capital / buy_price
+                    capital_before = capital
+                    capital = 0  # In assets
+                    holding = True
+                    running_high = current_price  # reset peak tracker
+                    
+                    transactions.append(Transaction(
+                        date=current_date.strftime('%Y-%m-%d %H:%M'),
+                        action="BUY", price=round(buy_price, 2), shares=round(shares, 4), value=round(capital_before, 2)
+                    ))
+                    equity_curve_dates.append(current_date.strftime('%Y-%m-%d'))
+                    equity_curve_values.append(round(capital_before, 2))
+            else:
+                if current_price >= buy_price * (1.0 + sell_rise):
+                    # Trigger Sell
+                    sell_price = current_price
+                    capital = shares * sell_price
+                    profit = (sell_price - buy_price) * shares
+                    
+                    total_trades += 1
+                    if profit > 0:
+                        winning_trades += 1
+                        
+                    transactions.append(Transaction(
+                        date=current_date.strftime('%Y-%m-%d %H:%M'),
+                        action="SELL", price=round(sell_price, 2), shares=round(shares, 4), value=round(capital, 2)
+                    ))
+                    equity_curve_dates.append(current_date.strftime('%Y-%m-%d'))
+                    equity_curve_values.append(round(capital, 2))
+                    
+                    holding = False
+                    running_high = current_price
     # ---------------------------------------------------------
     # OUTPUT COMPILATION
     # ---------------------------------------------------------
@@ -134,7 +194,13 @@ def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
         if buy_day_str in weekend_days or sell_day_str in weekend_days:
             text_resp += " This is because you selected a weekend (Saturday/Sunday). The Indian Stock Market (NSE/BSE) is closed on weekends, so no official historical trades could be executed! Try changing the day to Friday or Monday."
     else:
-        strat_type_name = "recurring weekly" if strategy.strategy_type != "one_time" else "historical single"
+        if strategy.strategy_type == "percentage_swing":
+            strat_type_name = "percentage swing"
+        elif strategy.strategy_type == "one_time":
+            strat_type_name = "historical single"
+        else:
+            strat_type_name = "recurring weekly"
+            
         text_resp = f"Executed {total_trades} {strat_type_name} trades on {ticker_name}. " \
                     f"Turned an initial investment of ₹{initial_capital:,.2f} into ₹{capital:,.2f} " \
                     f"with a win rate of {win_rate:.1f}%."

@@ -13,6 +13,8 @@ class StrategyParams(BaseModel):
     end_date: Optional[str] = None
     target_date: Optional[str] = None
     capital: Optional[float] = None
+    buy_drop_pct: Optional[float] = None
+    sell_rise_pct: Optional[float] = None
     error: Optional[str] = None
     message: Optional[str] = None
 

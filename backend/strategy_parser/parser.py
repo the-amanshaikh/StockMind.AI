@@ -35,7 +35,11 @@ Schema C (For Stock News):
 If the user ONLY asks for news about a stock on a specific date (e.g., "get me the news for Tata Motors on Jan 15 2026").
 Example Format: {{"strategy_type": "news", "ticker": "TATAMOTORS.NS", "target_date": "2026-01-15"}}
 
-Fallback:
+Schema D (For Percentage Swings / Buy the Dip):
+If the user mentions buying when a stock drops/falls by a specific PERCENTAGE (%), and selling when it rises/increases by a PERCENTAGE (%). Extract the percentages as pure integers/floats.
+Example Format: {{"strategy_type": "percentage_swing", "ticker": "RELIANCE.NS", "buy_drop_pct": 5.0, "sell_rise_pct": 5.0, "start_date": "2022-01-01", "end_date": "2024-01-01", "capital": 100000}}
+
+Fallbacks:
 If the user is missing crucial data for either schema (such as the ticker symbol, capital amount, or the specific start and end dates/timeframe), do NOT proceed with parsing. Instead, trigger the fallback and return EXACTLY:
 Example Format: {{"error": "Clarification needed", "message": "Could you please clarify the exact time period (start and end dates) and investment amount you'd like to backtest?"}}
 
