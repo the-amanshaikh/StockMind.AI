@@ -37,7 +37,7 @@ export default function WinAndLossPieChart({ buys, win_rate, theme = "blue" }: W
       </p>
       
       <div className="h-[200px] w-full relative z-10 transition-transform duration-700 ease-out group-hover:scale-105">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={200} minWidth={100}>
           <PieChart>
             <Tooltip 
               contentStyle={{ backgroundColor: 'rgba(15, 23, 42, 0.95)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', color: '#fff', boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.5)' }}

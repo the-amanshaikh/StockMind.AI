@@ -99,7 +99,12 @@ async def calculate_tax_endpoint(req: TaxCalcRequest):
         total_sell_value = sell_price * req.shares
         gross_profit = total_sell_value - total_buy_value
         
-        taxes = calculate_indian_taxes(total_buy_value, total_sell_value)
+        taxes = calculate_indian_taxes(
+            total_buy_value, 
+            total_sell_value, 
+            buy_df.iloc[0]['DateString'], 
+            sell_df.iloc[-1]['DateString']
+        )
         net_profit = gross_profit - taxes.total_taxes
         
         return {
@@ -129,5 +134,8 @@ def fetch_prompts():
 def read_root():
     return {"message": "Welcome to Stock Mindfull AI Backend!"}
 
+import os
+
 if __name__ == "__main__":
-    uvicorn.run("main:app", host="0.0.0.0", port=8000, reload=True)
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("main:app", host="0.0.0.0", port=port, reload=True)

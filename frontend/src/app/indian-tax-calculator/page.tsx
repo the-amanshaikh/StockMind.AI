@@ -235,6 +235,20 @@ export default function IndianTaxCalculatorPage() {
                         <span className="text-slate-400">Brokerage</span>
                         <span className="text-emerald-500 font-mono">₹{results.taxes.brokerage.toFixed(2)} (Delivery)</span>
                       </div>
+                      
+                      {results.taxes.stcg > 0 && (
+                        <div className="flex justify-between items-center text-sm pt-3 border-t border-slate-800">
+                          <span className="text-amber-500 font-bold overflow-hidden text-ellipsis whitespace-nowrap mr-2">Short Term Capital Gains (20%)</span>
+                          <span className="text-amber-500 font-mono font-bold">₹{results.taxes.stcg.toFixed(2)}</span>
+                        </div>
+                      )}
+
+                      {results.taxes.ltcg > 0 && (
+                        <div className="flex justify-between items-center text-sm pt-3 border-t border-slate-800">
+                          <span className="text-amber-500 font-bold overflow-hidden text-ellipsis whitespace-nowrap mr-2">Long Term Capital Gains (12.5%)</span>
+                          <span className="text-amber-500 font-mono font-bold">₹{results.taxes.ltcg.toFixed(2)}</span>
+                        </div>
+                      )}
                     </div>
                   </div>
 
