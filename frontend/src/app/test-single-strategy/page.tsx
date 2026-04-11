@@ -72,9 +72,21 @@ export default function BacktestPage() {
               <div className="relative flex items-center bg-[#0d1624]/80 backdrop-blur-[40px] border border-white/10 rounded-[1.5rem] p-2.5 shadow-2xl h-full">
                 <textarea
                   value={strategy}
-                  onChange={(e) => setStrategy(e.target.value)}
+                  onChange={(e) => {
+                    setStrategy(e.target.value);
+                    e.target.style.height = '72px';
+                    e.target.style.height = `${e.target.scrollHeight}px`;
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                      e.preventDefault();
+                      if (strategy.trim() && !loading) {
+                        runBacktest(e as any);
+                      }
+                    }
+                  }}
                   placeholder="e.g. Bought on Jan 10 2024 and sold on Jan 10 2025..."
-                  className="w-full bg-transparent border-none text-white placeholder-slate-600 focus:outline-none focus:ring-0 text-lg px-4 py-3 resize-none h-[72px] font-medium"
+                  className="w-full bg-transparent border-none text-white placeholder-slate-600 focus:outline-none focus:ring-0 text-lg px-4 py-3 resize-none min-h-[72px] max-h-[300px] overflow-y-auto font-medium"
                   disabled={loading}
                   rows={2}
                 />
@@ -86,6 +98,42 @@ export default function BacktestPage() {
                   {loading ? "..." : "RUN"}
                 </button>
               </div>
+            </div>
+            
+            {/* Example Prompts */}
+            <div className="grid gap-4 mt-8 grid-cols-1 md:grid-cols-3">
+              <button
+                type="button"
+                onClick={() => setStrategy("Invest 100000 rupees in RELIANCE.NS on Jan 10 2022 and sell on Jan 10 2025")}
+                className="text-left bg-[#0d1624]/60 backdrop-blur-md border border-blue-500/20 hover:border-blue-500/50 hover:shadow-[0_0_20px_rgba(59,130,246,0.15)] p-5 rounded-2xl transition-all group hover:-translate-y-1"
+              >
+                <div className="text-blue-400 font-black text-xs tracking-widest uppercase mb-3">Beginner Strategy</div>
+                <div className="text-slate-400 text-sm leading-relaxed font-medium group-hover:text-blue-100 transition-colors">
+                  &quot;Invest 100000 rupees in RELIANCE.NS on Jan 10 2022 and sell on Jan 10 2025&quot;
+                </div>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setStrategy("Buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025")}
+                className="text-left bg-[#0d1624]/60 backdrop-blur-md border border-purple-500/20 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] p-5 rounded-2xl transition-all group hover:-translate-y-1"
+              >
+                <div className="text-purple-400 font-black text-xs tracking-widest uppercase mb-3">Mediocre Strategy</div>
+                <div className="text-slate-400 text-sm leading-relaxed font-medium group-hover:text-purple-100 transition-colors">
+                  &quot;Buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025&quot;
+                </div>
+              </button>
+              
+              <button
+                type="button"
+                onClick={() => setStrategy("With 100000 rupees, buy ADANIENT.NS when it drops 5% and sell when it rises 10% starting from Jan 10 2022 upto Jan 30 2025")}
+                className="text-left bg-[#0d1624]/60 backdrop-blur-md border border-emerald-500/20 hover:border-emerald-500/50 hover:shadow-[0_0_20px_rgba(16,185,129,0.15)] p-5 rounded-2xl transition-all group hover:-translate-y-1"
+              >
+                <div className="text-emerald-400 font-black text-xs tracking-widest uppercase mb-3">Expert Strategy</div>
+                <div className="text-slate-400 text-sm leading-relaxed font-medium group-hover:text-emerald-100 transition-colors">
+                  &quot;With 100000 rupees, buy ADANIENT.NS when it drops 5% and sell when it rises 10% starting from Jan 10 2022 upto Jan 30 2025&quot;
+                </div>
+              </button>
             </div>
           </form>
         </motion.div>

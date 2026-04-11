@@ -34,7 +34,7 @@ export default function SummaryNumberCards({ stats, title, theme = "blue" }: Sta
   const isGoodWinRate = stats.win_rate >= 50;
 
   return (
-    <motion.div 
+    <motion.div
       variants={containerVariants}
       initial="hidden"
       animate="visible"
@@ -48,16 +48,16 @@ export default function SummaryNumberCards({ stats, title, theme = "blue" }: Sta
           </h3>
         </div>
       )}
-      
+
       <div className="grid grid-cols-2 lg:grid-cols-3 p-3 gap-3">
-        
+
         <motion.div variants={itemVariants} className="bg-white/[0.03] hover:bg-white/[0.08] p-6 rounded-2xl border border-white/5 transition-colors group">
           <div className="flex justify-between items-start mb-4">
             <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Total Trades</p>
           </div>
           <p className="text-3xl font-black text-white tracking-tighter drop-shadow-md">{stats.buys + stats.sells}</p>
         </motion.div>
-        
+
         <motion.div variants={itemVariants} className="bg-white/[0.03] hover:bg-white/[0.08] p-6 rounded-2xl border border-white/5 transition-colors group">
           <div className="flex justify-between items-start mb-4">
             <p className="text-sm font-semibold text-slate-400 uppercase tracking-wider group-hover:text-white transition-colors">Win Rate</p>

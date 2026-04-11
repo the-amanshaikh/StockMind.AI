@@ -75,45 +75,57 @@ def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
         sell_day = strategy.sell_day.lower() if strategy.sell_day else "friday"
         
         df['DayOfWeek'] = df[time_col].dt.day_name().str.lower()
-        df['YearWeek'] = df[time_col].dt.isocalendar().year.astype(str) + '-' + df[time_col].dt.isocalendar().week.astype(str)
         
-        weeks = df['YearWeek'].unique()
-        for week in weeks:
-            week_df = df[df['YearWeek'] == week]
-            buy_df = week_df[week_df['DayOfWeek'] == buy_day]
-            sell_df = week_df[week_df['DayOfWeek'] == sell_day]
+        holding = False
+        buy_price = 0.0
+        shares = 0.0
+        capital_before = capital
+        
+        for idx, row in df.iterrows():
+            current_day = row['DayOfWeek']
             
-            if not buy_df.empty and not sell_df.empty:
-                first_buy = buy_df.iloc[0]
-                last_sell = sell_df.iloc[-1]
+            if not holding and current_day == buy_day:
+                buy_price = row['Open']
+                if pd.isna(buy_price):
+                    continue
                 
-                if first_buy[time_col] < last_sell[time_col]:
-                    buy_price = first_buy['Open']
-                    sell_price = last_sell['Close']
+                shares = capital / buy_price
+                capital_before = capital
+                capital = 0  
+                holding = True
+                
+                transactions.append(Transaction(
+                    date=row[time_col].strftime('%Y-%m-%d %H:%M'),
+                    action="BUY", price=round(buy_price, 2), shares=round(shares, 4), value=round(capital_before, 2)
+                ))
+                
+            elif holding and current_day == sell_day:
+                sell_price = row['Close']
+                if pd.isna(sell_price):
+                    continue
+                
+                capital = shares * sell_price
+                profit = (sell_price - buy_price) * shares
+                
+                total_trades += 1
+                if profit > 0:
+                    winning_trades += 1
                     
-                    if pd.isna(buy_price) or pd.isna(sell_price):
-                        continue
-                        
-                    shares = capital / buy_price
-                    capital_before = capital
-                    capital = shares * sell_price
-                    profit = (sell_price - buy_price) * shares
-                    
-                    total_trades += 1
-                    if profit > 0:
-                        winning_trades += 1
-                        
-                    transactions.append(Transaction(
-                        date=first_buy[time_col].strftime('%Y-%m-%d %H:%M'),
-                        action="BUY", price=round(buy_price, 2), shares=round(shares, 4), value=round(capital_before, 2)
-                    ))
-                    transactions.append(Transaction(
-                        date=last_sell[time_col].strftime('%Y-%m-%d %H:%M'),
-                        action="SELL", price=round(sell_price, 2), shares=round(shares, 4), value=round(capital, 2)
-                    ))
-                    
-                    equity_curve_dates.append(last_sell[time_col].strftime('%Y-%m-%d'))
-                    equity_curve_values.append(round(capital, 2))
+                transactions.append(Transaction(
+                    date=row[time_col].strftime('%Y-%m-%d %H:%M'),
+                    action="SELL", price=round(sell_price, 2), shares=round(shares, 4), value=round(capital, 2)
+                ))
+                
+                equity_curve_dates.append(row[time_col].strftime('%Y-%m-%d'))
+                equity_curve_values.append(round(capital, 2))
+                
+                holding = False
+
+        if holding:
+            # Revert the capital back to the final day's close price or just keep invested value
+            # Standard is to mark-to-market at the end of the backtest
+            final_price = df.iloc[-1]['Close'] if not df.empty else buy_price
+            capital = shares * final_price
 
     # ---------------------------------------------------------
     # PERCENTAGE SWING STRATEGY LOGIC
@@ -175,6 +187,10 @@ def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
                     
                     holding = False
                     running_high = current_price
+                    
+        if holding:
+            final_price = df.iloc[-1]['Close'] if not df.empty else buy_price
+            capital = shares * final_price
     # ---------------------------------------------------------
     # OUTPUT COMPILATION
     # ---------------------------------------------------------
