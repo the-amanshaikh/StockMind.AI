@@ -1,7 +1,7 @@
 import os
 from groq import Groq
 from api.models import StrategyParams
-from dotenv import load_dotenv
+from dotenv import load_dotenv 
 
 load_dotenv()
 
