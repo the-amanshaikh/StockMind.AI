@@ -16,6 +16,7 @@ interface StatsProps {
   theme?: "blue" | "purple";
 }
 
+
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
