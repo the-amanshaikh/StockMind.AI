@@ -4,6 +4,7 @@ from typing import List, Optional
 class ChatRequest(BaseModel):
     text: str
 
+
 class StrategyParams(BaseModel):
     strategy_type: Optional[str] = None
     ticker: Optional[str] = None
@@ -50,3 +51,4 @@ class TaxCalcRequest(BaseModel):
     buy_date: str
     sell_date: str
     shares: float
+
