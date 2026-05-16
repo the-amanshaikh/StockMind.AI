@@ -9,6 +9,7 @@ interface WinLossProps {
   theme?: "blue" | "purple";
 }
 
+
 export default function WinAndLossPieChart({ buys, win_rate, theme = "blue" }: WinLossProps) {
   // Assuming buys = round trip trades
   const totalTrades = buys;
