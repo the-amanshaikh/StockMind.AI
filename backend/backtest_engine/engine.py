@@ -1,6 +1,7 @@
 import pandas as pd
 from api.models import Transaction, BacktestResult, StrategyParams
 
+
 def run_backtest(df: pd.DataFrame, strategy: StrategyParams) -> BacktestResult:
     """
     Simulates trading strictly in-memory using Pandas.
