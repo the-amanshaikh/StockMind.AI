@@ -90,6 +90,7 @@ export default function LineGraphForProfits({ dates, values, valuesB }: EquityCh
     },
   };
 
+  
   const datasets: any[] = [
     {
       fill: true,
