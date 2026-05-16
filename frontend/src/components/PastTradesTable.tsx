@@ -92,3 +92,41 @@ export default function PastTradesTable({ transactions }: TradeHistoryProps) {
     </motion.div>
   );
 }
+
+/* 
+make a new vm  with all 3 chekbox checked like http https tcp 
+go to help console
+add username and pass
+
+sudo apt update
+sudo apt install nodejs npm -y
+sudo npm install -g pm2
+
+git clone https://github.com/the-amanshaikh/LP2_PRACTICALS.git
+cd LP2_PRACTICALS
+cd ecommerse
+npm install
+pm2 start server.js --name "ecommerse_app"
+
+http://98.70.28.191:5000
+do some activity 
+
+cat vm_database.json
+cat vm_ecommerce_db.json
+cat vm_blog_db.json
+cat vm_event_db.json
+cat vm_todo_db.json
+
+to show client and server do this where client is sending http get request to web server
+
+curl http://98.70.28.191:5000
+
+sudo apt update
+sudo apt install nginx -y
+sudo rm /var/www/html/index.html
+sudo nano /var/www/html/index.html
+destinaation port 80 and see http://74.225.251.197
+
+chmod 600 file.txt
+scp file.txt pict2@10.1.0.5:/home/pict2/
+*/
