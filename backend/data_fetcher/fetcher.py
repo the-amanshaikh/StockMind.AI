@@ -1,6 +1,7 @@
 import yfinance as yf
 import pandas as pd
 
+
 def fetch_data(symbol: str) -> pd.DataFrame:
     """
     Fetches historical stock data from Yahoo Finance.
