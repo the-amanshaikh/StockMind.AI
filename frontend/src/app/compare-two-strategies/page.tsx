@@ -161,14 +161,14 @@ export default function ComparePage() {
               <button
                 type="button"
                 onClick={() => {
-                  setStrategy("Buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025");
-                  setStrategyB("Buy CIPLA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025");
+                  setStrategy("With 100000 rupees, buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025");
+                  setStrategyB("With 100000 rupees, buy CIPLA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025");
                 }}
                 className="text-left bg-[#0d1624]/60 backdrop-blur-md border border-purple-500/20 hover:border-purple-500/50 hover:shadow-[0_0_20px_rgba(168,85,247,0.15)] p-5 rounded-2xl transition-all group hover:-translate-y-1"
               >
                 <div className="text-purple-400 font-black text-xs tracking-widest uppercase mb-3">Mediocre Matchup</div>
                 <div className="text-slate-400 text-sm leading-relaxed font-medium group-hover:text-purple-100 transition-colors">
-                  &quot;Buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025&quot;
+                  &quot;With 100000 rupees, buy SUNPHARMA.NS every Friday and sell every Monday between 10 jan 2022 and 30 jan 2025&quot;
                 </div>
               </button>
               
