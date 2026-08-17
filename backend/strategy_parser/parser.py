@@ -48,20 +48,34 @@ If you encounter the fallback case, ensure the 'error' field is populated and 'm
 Ensure the extracted response strictly follows the StrategyParams JSON object structure for output.
     """
     
-    try:
-        completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "user",
-                    "content": prompt
-                }
-            ],
-            response_format={"type": "json_object"},
-            temperature=0.1,
-        )
-        
-        rules = StrategyParams.model_validate_json(completion.choices[0].message.content)
-        return rules
-    except Exception as e:
-        raise ValueError(f"Failed to parse strategy with AI: {str(e)}")
+    # Support configuring model via env var, with sensible defaults and automatic fallbacks
+    primary_model = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+    models_to_try = [primary_model, "openai/gpt-oss-20b", "qwen/qwen3.6-27b", "groq/compound"]
+    
+    # Remove duplicate model names while preserving order
+    seen = set()
+    models_to_try = [m for m in models_to_try if not (m in seen or seen.add(m))]
+    
+    last_exception = None
+    for model_name in models_to_try:
+        try:
+            completion = client.chat.completions.create(
+                model=model_name,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt
+                    }
+                ],
+                response_format={"type": "json_object"},
+                temperature=0.1,
+            )
+            
+            rules = StrategyParams.model_validate_json(completion.choices[0].message.content)
+            return rules
+        except Exception as e:
+            last_exception = e
+            continue
+            
+    raise ValueError(f"Failed to parse strategy with AI using available models: {str(last_exception)}")
+

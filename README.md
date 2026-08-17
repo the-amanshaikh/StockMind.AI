@@ -9,7 +9,7 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-06B6D4?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
-[![Groq AI](https://img.shields.io/badge/Groq_LLM-Llama_3.3_70B-f05023?style=for-the-badge&logo=openai&logoColor=white)](https://groq.com/)
+[![Groq AI](https://img.shields.io/badge/Groq_LLM-GPT_OSS_120B-f05023?style=for-the-badge&logo=openai&logoColor=white)](https://groq.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
 
 **[Explore Features](#-key-features) • [System Architecture](#-system-architecture) • [Quick Start](#-quick-start) • [API Specs](#-api-specifications) • [Strategy Schemas](#-supported-strategy-schemas)**
@@ -31,7 +31,7 @@ In addition to strategy execution, StockMind.AI incorporates side-by-side strate
 ## 🔥 Key Features
 
 ### 1. 🤖 Natural Language AI Backtesting Router
-* **Zero-Shot Parameter Extraction**: Powered by **Groq (Llama-3.3-70b-versatile)** and **Google Gemini API**, converting conversational queries into strict JSON trading configurations.
+* **Zero-Shot Parameter Extraction**: Powered by **Groq (`openai/gpt-oss-120b` & `openai/gpt-oss-20b`)** and **Google Gemini API**, converting conversational queries into strict JSON trading configurations.
 * **Intelligent Clarification Prompts**: Automatically prompts users if key inputs (like stock ticker, timeframe, or capital) are missing or ambiguous.
 * **Weekend & Market Schedule Aware**: Detects invalid trading inputs (e.g. attempting to execute trades on Saturdays or Sundays) and provides contextual guidance for NSE/BSE market schedules.
 
@@ -112,7 +112,7 @@ Supports three core quantitative strategy paradigms:
 | **UI & Styling** | Tailwind CSS v4, Framer Motion, Lucide Icons |
 | **Data Visualization** | Chart.js, react-chartjs-2, Recharts |
 | **Backend Framework** | Python 3.10+, FastAPI, Uvicorn, Pydantic v2 |
-| **AI / LLM Layer** | Groq API (`llama-3.3-70b-versatile`), Google Gemini AI |
+| **AI / LLM Layer** | Groq API (`openai/gpt-oss-120b`, `openai/gpt-oss-20b`), Google Gemini AI |
 | **Financial Engine** | Pandas, NumPy, `yfinance` (High-resolution 1h OHLC data) |
 | **Database** | SQLite3 (Prompt audit & logging) |
 
